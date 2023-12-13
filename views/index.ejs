@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shared Gallery</title>
+    <!-- Add Bootstrap CDN link -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla:wght@500&family=Montserrat:wght@500&display=swap"
+      rel="stylesheet" />
+    <style type="text/css" media="screen">
+      body {
+        font-family: "Karla";
+        background-color: #050404;
+        color: #f3ecea;
+      }
+
+      nav {
+        background-color: #050404;
+      }
+
+      .nav-brand {
+        font-family: "Montserrat" !important;
+        color: #e9c7b7;
+      }
+
+      input,
+      textarea {
+        background-color: #586b39 !important;
+        color: #f3ecea !important;
+        border: 2px solid #e9c7b7 !important;
+      }
+
+      .card {
+        border: none;
+        background-color: #425734;
+        border-radius: 12px;
+        transition: transform 0.2s;
+      }
+
+      .card:hover {
+        transform: scale(1.05);
+      }
+
+      .card-img-top {
+        border-radius: 12px 12px 0 0;
+        max-height: 200px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: 1.25rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .card-footer {
+        background-color: #586b39;
+        border-top: 2px solid #425734;
+        padding: 0.75rem;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background-color: #e9c7b7;
+        border: none;
+        color: #11181a;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 991px) {
+        .card-columns {
+          column-count: 2;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .card-columns {
+          column-count: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("navbar") %>
+    <div class="container mt-3">
+      <div class="card-columns">
+        <% data.sort(() => Math.random() - 0.5).slice(0,20).forEach((entry) => {
+        %>
+        <div class="card">
+          <img
+            src="/image/<%= entry.id %>.jpg"
+            class="card-img-top"
+            alt="Image 1"
+            onerror="this.remove()" />
+          <div class="card-body">
+            <h4 class="card-title"><%= entry.nama %></h4>
+          </div>
+          <div class="card-footer">
+            <a class="btn btn-primary" href="/listen/<%= entry.id %>">Listen</a>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+  </body>
+</html>

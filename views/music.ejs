@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DoMusic</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla:wght@500&family=Montserrat:wght@500&display=swap"
+      rel="stylesheet" />
+    <style type="text/css" media="screen">
+      body {
+        font-family: "Karla";
+        background: linear-gradient(to bottom, rgba(18, 18, 18, 0.87), rgba(18, 18, 18, 1)), url("/image/<%= entry.id %>.jpg");
+        backdrop-filter: blur(15px);
+        height: 100vh;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      :root {
+        --text: #f3ecea;
+        --background: #050404;
+        --primary: #425734;
+        --secondary: #586b39;
+        --accent: #e9c7b7;
+      }
+      .text-white {
+        color: var(--text) !important;
+      }
+      .bg-dark {
+        background-color: var(--background) !important;
+      }
+      .bg-dark > .card,
+      .bg-dark > .card-body,
+      img,
+      .card-img-top {
+        background-color: var(--primary) !important;
+        border-radius: 15px;
+        margin-top: 10px;
+      }      
+
+      .card-body {
+        background-color: #1e1e1e; /* Warna latar belakang card */
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      #timeline {
+        width: 100%;
+        height: 5px;
+        background-color: #555;
+        position: relative;
+        margin-top: 4px;
+        margin-left: 10px;
+      }
+
+      #playhead {
+        width: 5px;
+        height: 20px;
+        background-color: var(--accent);
+        cursor: pointer;
+        position: absolute;
+        top: -10px; /* Sesuaikan dengan desain Anda */
+      }
+    </style>
+  </head>
+  <body class="bg-dark text-white">
+    <%- include("navbar") %>
+    <!-- Content -->
+
+    <div class="container d-flex justify-content-center my-4 mb-5">
+        
+      <div id="mobile-box" class="w-100">
+
+        <!-- Card -->
+        <div class="card" style="background: rgba(0,0,0,0); border: 0;">
+
+        <!-- Card with Lyrics -->
+        <div class="row">
+          <div class="col-md-6 order-md-1">
+            <div
+            class="bg-image hover-overlay ripple"
+            data-mdb-ripple-color="light">
+            <img
+              class="card-img-top"
+              src="/image/<%= entry.id%>.jpg"
+              alt="Card image cap" />
+            <a href="#">
+              <div
+                class="mask"
+                style="background-color: rgba(251, 251, 251, 0.15)"></div>
+            </a>
+          </div>
+            <div class="card bg-dark" style="background: rgba(0,0,0,0) !important; border: 0;">
+              <div class="card-body text-center">
+                <h5 class="h5 font-weight-bold">
+                  <a
+                    href="#"
+                    target="_blank"
+                    style="color: var(--accent) !important"
+                    ><%= entry.nama %></a
+                  >
+                </h5>
+                <audio id="music" autoplay>
+                  <source src="/music/<%= entry.id %>.mp3" />
+                </audio>
+                <div
+                  id="audioplayer"
+                  class="d-flex justify-content-between align-items-center">
+                  <i id="pButton" class="fa fa-pause"></i>
+                  <div id="timeline" class="flex-grow-1">
+                    <div id="playhead"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 order-md-2">
+            <div class="card bg-dark" style="background: rgba(0,0,0,0) !important; border: 0;">
+              <div class="card-body bg-dark text-center" style="background: var(--secondary) !important;">
+                <h5 style="color: var(--accent)">Lyrics</h5>
+                <p>
+                    <%= entry.lirik %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Card with Lyrics -->
+      </div>
+    </div>
+    <!-- Content -->
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var music = document.getElementById("music");
+        var pButton = document.getElementById("pButton");
+        var playhead = document.getElementById("playhead");
+        var timeline = document.getElementById("timeline");
+
+        var duration = music.duration;
+
+        // Tambahkan event listener untuk menunggu audio dimuat sepenuhnya
+        music.addEventListener("loadedmetadata", function () {
+          duration = music.duration; // Perbarui nilai durasi setelah audio dimuat
+        });
+
+        pButton.addEventListener("click", play);
+
+        function play() {
+          if (music.paused) {
+            music.play();
+            pButton.className = "fa fa-pause";
+          } else {
+            music.pause();
+            pButton.className = "fa fa-play";
+          }
+        }
+
+        music.addEventListener("timeupdate", timeUpdate, false);
+
+        function timeUpdate() {
+          var playPercent =
+            (timeline.offsetWidth - playhead.offsetWidth) *
+            (music.currentTime / duration);
+          playhead.style.marginLeft = playPercent + "px";
+          if (music.currentTime == duration) {
+            var id = parseInt(Math.floor(Math.random() * 5) + 1)
+            if(id == 0) {
+                id = parseInt(Math.floor(Math.random() * 5) + 1)
+            }
+            window.location.href="https://domusic.mfathinhalim.repl.co/listen/" + id;
+          }
+        }
+
+        timeline.addEventListener(
+          "click",
+          function (event) {
+            moveplayhead(event);
+            music.currentTime = duration * clickPercent(event);
+          },
+          false
+        );
+
+        function clickPercent(event) {
+          return (event.clientX - getPosition(timeline)) / timeline.offsetWidth;
+        }
+
+        function moveplayhead(event) {
+          var newMargLeft = event.clientX - getPosition(timeline);
+
+          if (
+            newMargLeft >= 0 &&
+            newMargLeft <= timeline.offsetWidth - playhead.offsetWidth
+          ) {
+            playhead.style.marginLeft = newMargLeft + "px";
+          }
+          if (newMargLeft < 0) {
+            playhead.style.marginLeft = "0px";
+          }
+          if (newMargLeft > timeline.offsetWidth - playhead.offsetWidth) {
+            playhead.style.marginLeft =
+              timeline.offsetWidth - playhead.offsetWidth + "px";
+          }
+        }
+
+        function getPosition(el) {
+          return el.getBoundingClientRect().left;
+        }
+      });
+    </script>
+  </body>
+</html>
